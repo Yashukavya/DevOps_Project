@@ -1,35 +1,21 @@
-// Declarative //
 
 pipeline {
     agent any
+    tools {
+        maven 'maven'
+    }
 
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
+                sh 'mvn clean package'
             }
         }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }
+        
         stage('Deploy') {
             steps {
-                echo 'Deploying....'
+                script {
+                    deploy adapters: [tomcat9(credentialsId: 'a9d31f57-54ec-4f6c-96bf-df4e6bd48844', path: '', url: 'http://3.137.179.17:8080')], contextPath: null, war: '**/*.war'
             }
         }
     }
-}
-// Script //
-// node {
-//     stage('Build') {
-//         echo 'Building....'
-//     }
-//     stage('Test') {
-//         echo 'Building....'
-//     }
-//     stage('Deploy') {
-//         echo 'Deploying....'
-//     }
-// }
